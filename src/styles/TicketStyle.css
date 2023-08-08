@@ -1,0 +1,65 @@
+.pagination-wrapper {
+  /* Đưa phần phân trang vào góc phải trên cùng */
+  .ant-pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding: 10px 0;
+  }
+
+  .ant-pagination-item {
+    margin-right: 8px;
+
+    a {
+      color: #1890ff;
+      border: 1px solid #1890ff;
+      border-radius: 4px;
+      padding: 4px 8px;
+      transition: all 0.3s;
+
+      &:hover {
+        background-color: #1890ff;
+        color: white;
+      }
+    }
+  }
+
+  .ant-pagination-prev,
+  .ant-pagination-next {
+    margin-right: 16px;
+
+    a {
+      color: #1890ff;
+      border: 1px solid #1890ff;
+      border-radius: 4px;
+      padding: 4px 8px;
+      transition: all 0.3s;
+
+      &:hover {
+        background-color: #1890ff;
+        color: white;
+      }
+    }
+  }
+}
+
+.search-select-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.ticket-input-search {
+  width: 35%;
+  margin-right: 15%;
+}
+
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+}
+
+.select-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
