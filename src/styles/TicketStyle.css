@@ -63,3 +63,15 @@
   font-weight: bold;
   margin-bottom: 8px;
 }
+/* detail ticket */
+.modal-detail-ticket-div-left {
+  float: left;
+  width: 45%;
+}
+.modal-detail-ticket-div-right {
+  float: right;
+  width: 45%;
+}
+.modal-detail-ticket-div-center {
+  clear: both;
+}
