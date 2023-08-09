@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Table,
-  Radio,
-  Select,
-  Pagination,
-  Modal,
-  Space,
-} from "antd";
+import { Input, Button, Table, Select, Pagination } from "antd";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
 import axios from "axios";
 import { apiTicket } from "../../../config/api";
 import "../../../styles/TicketStyle.css";
+import {
+  GetListTicket,
+  SetListTikcet,
+} from "../../app/reducers/TicketSlice.reducer";
+import ModalDetailTicket from "../../modals/Modal_Ticket/DetailModalTicket";
 const Ticket = () => {
-  let [listTicket, setListTicket] = useState([]);
+  const dispatch = useAppDispatch();
+  // let [listTicket, setListTicket] = useState([]);
   let [currentPage, setCurrentPage] = useState(0);
   let [totalPages, setTotalPages] = useState(0);
   let [inputSearch, setInputSearch] = useState("");
+  const [isModalDetailTicket, setIsModalDetailTicket] = useState(false);
+  const [detailTicketId, setDetailTicketId] = useState(null);
+
   const columns = [
     {
       title: "STT",
@@ -72,7 +72,12 @@ const Ticket = () => {
       key: "action",
       render: (text, record) => (
         <div>
-          <Button type="primary">Detail</Button>
+          <Button
+            onClick={() => handleClickModalDetailTicket(record.id)}
+            type="primary"
+          >
+            Detail
+          </Button>
           {/* <Button onClick={() => handleDeleteCategory(record.id)} type="primary">
             Delete
           </Button> */}
@@ -82,40 +87,51 @@ const Ticket = () => {
   ];
   //effect load data khi chuyển trang
   useEffect(() => {
-    loadDataTicket(currentPage);
+    fetchData(currentPage);
   }, [currentPage]);
   //effect load data inpute search
   useEffect(() => {
     if (!inputSearch) {
-      loadDataTicket(currentPage);
+      fetchData(currentPage);
     }
     handleTypeInputSearch(inputSearch);
   }, [inputSearch]);
-  const loadDataTicket = (currentPage) => {
+  //redux
+  const handleCancelModalDetailTicket = () => {
+    setIsModalDetailTicket(false);
+  };
+  const listTicketRedux = useAppSelector(GetListTicket);
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+  const fetchData = () => {
     axios
       .get(apiTicket + "/get-all?pageNo=" + currentPage)
       .then((response) => {
-        const dataWithSTT = response.data.content.map((item, index) => ({
-          ...item,
-          stt: index + 1 + currentPage * 10, // Tính giá trị STT từ 1 đến hết cho mỗi hàng
-        }));
-        setListTicket(dataWithSTT);
         setCurrentPage(response.data.number);
         setTotalPages(response.data.totalPages);
+        dispatch(SetListTikcet(response.data.content));
+
+        // setTimeout(() => {
+        //   setIsLoading(false);
+        // }, 1000);
       })
       .catch((error) => {
-        console.error("Lỗi khi gọi API get all ticket:", error);
+        console.log(error);
       });
   };
+
+  const handleClickModalDetailTicket = (id) => {
+    setIsModalDetailTicket(true);
+    setDetailTicketId(id);
+  };
+
+  //redux search ô input
   const handleTypeInputSearch = (inputSearch) => {
     axios
       .get(apiTicket + "/search-ticket?pageNo=0&inputSearch=" + inputSearch)
       .then((response) => {
-        const dataWithSTT = response.data.content.map((item, index) => ({
-          ...item,
-          stt: index + 1 + currentPage * 10, // Tính giá trị STT từ 1 đến hết cho mỗi hàng
-        }));
-        setListTicket(dataWithSTT);
+        dispatch(SetListTikcet(response.data.content));
         setCurrentPage(response.data.number);
         setTotalPages(response.data.totalPages);
       })
@@ -171,7 +187,7 @@ const Ticket = () => {
       {/* table */}
       <div className="table-wrapper">
         <Table
-          dataSource={listTicket}
+          dataSource={listTicketRedux}
           columns={columns}
           rowKey="id"
           pagination={false}
@@ -185,6 +201,11 @@ const Ticket = () => {
           total={totalPages * 10}
         />
       </div>
+      <ModalDetailTicket
+        visible={isModalDetailTicket}
+        handleCancelModalDetailTicket={handleCancelModalDetailTicket}
+        id={detailTicketId}
+      ></ModalDetailTicket>
     </div>
   );
 };
