@@ -254,6 +254,7 @@ const Food = () => {
 
   return (
     <div>
+      <h2>Đồ ăn</h2>
       <div
         style={{
           display: "flex",

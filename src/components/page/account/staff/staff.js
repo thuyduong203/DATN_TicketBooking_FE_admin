@@ -2,12 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, InputNumber, Select } from "antd";
 import axios from "axios";
 import ModalCreateStaff from "./modalAddStaff";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
+import { apiStaff } from "../../../../config/api";
+import ModalUpdateStaff from "./modalUpdate";
+import {
+  SetListStaff,
+  GetListStaff,
+} from "../../../app/reducers/StaffSlice.reducer";
+import ModalDetailStaff from "./modalDetailStaff";
 
 const Staff = () => {
-  let [list, setList] = useState([]);
   let [currentPage, setCurrentPage] = useState(0);
   let [totalPages, setToTalPages] = useState(0);
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     loadStaff(currentPage);
   }, [currentPage]);
@@ -16,12 +23,7 @@ const Staff = () => {
     axios
       .get("http://localhost:8080/employee?page=" + page)
       .then((response) => {
-        setList(
-          response.data.content.map((item, index) => ({
-            ...item,
-            stt: index + 1,
-          }))
-        );
+        dispatch(SetListStaff(response.data.content));
         // setList(response.data.content);
         setCurrentPage(0);
         setToTalPages(response.data.totalPages);
@@ -97,13 +99,34 @@ const Staff = () => {
       render: (text, record) => (
         <span>
           {/* Thêm các hành động tương ứng với từng hàng */}
-          <Button>Detail</Button>
-          <Button>Edit</Button>
-          <Button>Delete</Button>
+          <Button onClick={() => showModalDetail(record.id)}>Detail</Button>
+          <Button onClick={() => showModalUpdate(record.id)}>Edit</Button>
+          <Button
+            onClick={() => {
+              remove(record.id);
+            }}
+          >
+            Delete
+          </Button>
         </span>
       ),
     },
   ];
+
+  //remove
+  const remove = (id) => {
+    const confirmed = window.confirm(
+      "Bạn có chắc chắn muốn thực hiện hành động này?"
+    );
+    if (confirmed === true) {
+      axios.put(apiStaff + "/remove/" + id).then((response) => {
+        if (response.data.statusCode === "success") {
+          alert(response.data.data);
+          loadStaff(0);
+        }
+      });
+    }
+  };
 
   const [isModalCreate, setIsModalCreate] = useState(false);
 
@@ -116,15 +139,44 @@ const Staff = () => {
     setIsModalCreate(false);
   };
 
+  const [isModalDetail, setIsModalDetail] = useState(false);
+  const [idDetail, setIdDetail] = useState(null);
+  //modal detail
+  const showModalDetail = (id) => {
+    setIsModalDetail(true);
+    setIdDetail(id);
+  };
+
+  const handleCancelDetail = () => {
+    setIsModalDetail(false);
+  };
+
+  //modal update
+  const [isModalUpdate, setIsModalUpdate] = useState(false);
+
+
+  //modal update
+  const showModalUpdate = (id) => {
+    setIsModalUpdate(true);
+    setIdDetail(id);
+  };
+
+  const handleCancelUpdate = () => {
+    setIsModalUpdate(false);
+  };
+
+  const listStaff = useAppSelector(GetListStaff);
+
   return (
     <div>
+      <h2>Nhân viên</h2>
       <div style={{ marginBottom: 16, textAlign: "right" }}>
         <Button type="primary" onClick={showModal}>
           Thêm nhân viên
         </Button>
       </div>
       <Table
-        dataSource={list}
+        dataSource={listStaff}
         columns={columns}
         pagination={false}
         rowKey="id"
@@ -132,6 +184,16 @@ const Staff = () => {
       <ModalCreateStaff
         isModalVisible={isModalCreate}
         handleCancel={handleCancel}
+      />
+      <ModalDetailStaff
+        isModalVisible={isModalDetail}
+        handleCancel={handleCancelDetail}
+        id={idDetail}
+      />
+      <ModalUpdateStaff
+        isModalVisible={isModalUpdate}
+        handleCancel={handleCancelUpdate}
+        id={idDetail}
       />
     </div>
   );
