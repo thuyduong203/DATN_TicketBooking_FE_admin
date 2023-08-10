@@ -21,6 +21,9 @@ import MainActor from "./page/films/MainActor";
 import { Routes, Route, useLocation } from "react-router-dom";
 //account
 import Staff from "./page/account/staff/staff";
+//Order
+import Order from "./page/order/Order";
+import OrderDetail from "./page/order/OrderDetail";
 
 import { animateScroll as scroll } from "react-scroll";
 const { Content } = Layout;
@@ -46,6 +49,8 @@ const CustomContent = () => {
       }}
     >
       <Routes>
+        <Route path="/order" element={<Order />} />
+        <Route path="/order/:id" element={<OrderDetail />} />
         <Route path="/room" element={<Room />} />
         <Route path="/chair" element={<Chair />} />
         <Route path="/ticket" element={<Ticket />} />

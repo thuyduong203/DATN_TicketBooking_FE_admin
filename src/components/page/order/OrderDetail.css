@@ -1,0 +1,21 @@
+.timeline-container {
+  padding: 20px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgb(161, 161, 161);
+  white-space: nowrap; /* Ngăn chữ xuống dòng trong .timeline-container */
+}
+
+/* Điều chỉnh chiều rộng của các sự kiện trong Timeline */
+.timeline-event {
+  min-width: 200px; /* Đặt chiều rộng tối thiểu cho mỗi sự kiện */
+  white-space: nowrap; /* Ngăn chữ xuống dòng trong sự kiện */
+  display: inline-block; /* Hiển thị các sự kiện cạnh nhau */
+  vertical-align: top; /* Căn sự kiện theo đỉnh container */
+  margin-right: 10px; /* Khoảng cách giữa các sự kiện */
+}
+.Timeline-wrapper-1 {
+  position: relative;
+  overflow: auto !important;
+  width: 100%;
+}
