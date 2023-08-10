@@ -76,6 +76,7 @@ npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg
 
 
 npm i react-perfect-scrollbar --legacy-peer-deps
+
 npm i react-icons --legacy-peer-deps
 
 npm install @ant-design/icons --legacy-peer-deps
