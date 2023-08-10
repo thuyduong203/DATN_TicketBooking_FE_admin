@@ -17,6 +17,7 @@ const Food = () => {
   let [unit, setUnit] = useState("");
   let [quantity, setQuantity] = useState();
   let [idFood, setIdFood] = useState();
+  let idTypeFoodUpdate;
 
   useEffect(() => {
     loadFood(currentPage);
@@ -31,7 +32,6 @@ const Food = () => {
       .then((response) => {
         setlistTypeFood(response.data.data);
         setIdTypeFood(listTypeFood[0].id);
-        console.log("có");
       })
       .catch((error) => {});
   };
@@ -215,23 +215,15 @@ const Food = () => {
       .get("http://localhost:8080/snack/find-by-id/" + record.id)
       .then((response) => {
         if (response.data.statusCode === "OK") {
-          setIdTypeFood(response.data.data.snackType.id);
+          idTypeFoodUpdate = response.data.data.snackType.id;
           setName(response.data.data.name);
           setPrice(response.data.data.price);
           setQuantity(response.data.data.quantity);
           setUnit(response.data.data.unit);
-          console.log(idTypeFood);
+          console.log(idTypeFoodUpdate);
         }
       });
     setEditModalVisible(true);
-    // setIdTypeFood(record.snackType.id);
-    // setEditingItem(record);
-    // setEditModalVisible(true);
-    // setName(record.name);
-    // setPrice(record.price);
-    // setQuantity(record.quantity);
-    // setUnit(record.unit);
-    // console.log(idTypeFood);
   };
 
   const handleEditOk = () => {
@@ -394,7 +386,7 @@ const Food = () => {
               <Select
                 defaultValue={
                   // listTypeFood === idTypeFood ? idTypeFood : undefined?
-                  idTypeFood
+                  idTypeFoodUpdate
                 }
                 onChange={(e) => {
                   setEditingItem({
