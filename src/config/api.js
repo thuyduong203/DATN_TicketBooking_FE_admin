@@ -6,6 +6,8 @@ const apiStaff = apiURL + "/employee";
 
 const apiCombo = apiURL + "/combo";
 
+const apiFood = apiURL + "/snack";
+
 const apiOrder = apiURL + "/order";
 
 const apiOrderSnack = apiURL + "/order-snack";
@@ -20,6 +22,7 @@ export {
   apiTicket,
   apiStaff,
   apiCombo,
+  apiFood,
   apiOrder,
   apiOrderSnack,
   apiOrderTicket,
