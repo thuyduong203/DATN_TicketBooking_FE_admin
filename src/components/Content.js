@@ -25,6 +25,8 @@ import Staff from "./page/account/staff/staff";
 import Order from "./page/order/Order";
 import OrderDetail from "./page/order/OrderDetail";
 
+import Sell from "./page/sell";
+
 import { animateScroll as scroll } from "react-scroll";
 const { Content } = Layout;
 
@@ -70,6 +72,7 @@ const CustomContent = () => {
         <Route path="/image" element={<Image />} />
 
         <Route path="/staff" element={<Staff />} />
+        <Route path="/sell" element={<Sell />} />
       </Routes>
     </Content>
   );
