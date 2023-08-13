@@ -1,26 +1,33 @@
-import React,{useEffect} from 'react';
-import {  theme,Layout } from 'antd';
+import React, { useEffect } from "react";
+import { theme, Layout } from "antd";
 //Products
-import Room from './page/products/Room';
-import Chair from './page/products/Chair';
-import Ticket from './page/products/Ticket';
-import TypeTicket from './page/products/TypeTicket';
+import Room from "./page/products/Room";
+import Chair from "./page/products/Chair";
+import Ticket from "./page/products/Ticket";
+import TypeTicket from "./page/products/TypeTicket";
 // Food Combo
-import Combo from './page/foodCombo/Combo';
-import Food from './page/foodCombo/Food';
+import Combo from "./page/foodCombo/combo/Combo";
+import Food from "./page/foodCombo/Food";
 // Films
-import Actor from './page/films/Actor';
-import Directors from './page/films/Directors';
-import Genre from './page/films/Genre';
-import Image from './page/films/Image';
-import Movie from './page/films/Movie';
-import Producer from './page/films/Producer';
-import Showtime from './page/films/Showtime';
-import Trailer from './page/films/Trailer';
-import MainActor from './page/films/MainActor';
-import { Routes, Route,useLocation } from "react-router-dom";
+import Actor from "./page/films/Actor";
+import Directors from "./page/films/Directors";
+import Genre from "./page/films/Genre";
+import Image from "./page/films/Image";
+import Movie from "./page/films/Movie";
+import Producer from "./page/films/Producer";
+import Showtime from "./page/films/Showtime";
+import Trailer from "./page/films/Trailer";
+import MainActor from "./page/films/MainActor";
+import { Routes, Route, useLocation } from "react-router-dom";
+//account
+import Staff from "./page/account/staff/staff";
+//Order
+import Order from "./page/order/Order";
+import OrderDetail from "./page/order/OrderDetail";
 
-import { animateScroll as scroll } from 'react-scroll'; 
+import Sell from "./page/sell";
+
+import { animateScroll as scroll } from "react-scroll";
 const { Content } = Layout;
 
 const CustomContent = () => {
@@ -37,15 +44,16 @@ const CustomContent = () => {
   return (
     <Content
       style={{
-        margin: '24px 16px',
+        margin: "24px 16px",
         padding: 24,
-        minHeight:  'calc(100vh - 48px)',
+        minHeight: "calc(100vh - 48px)",
         background: colorBgContainer,
       }}
     >
-    <Routes>
-
-        <Route path="/room" element={<Room />}  />
+      <Routes>
+        <Route path="/order" element={<Order />} />
+        <Route path="/order/:id" element={<OrderDetail />} />
+        <Route path="/room" element={<Room />} />
         <Route path="/chair" element={<Chair />} />
         <Route path="/ticket" element={<Ticket />} />
         <Route path="/typeTicket" element={<TypeTicket />} />
@@ -63,8 +71,9 @@ const CustomContent = () => {
         <Route path="/trailer" element={<Trailer />} />
         <Route path="/image" element={<Image />} />
 
-
-    </Routes>
+        <Route path="/staff" element={<Staff />} />
+        <Route path="/sell" element={<Sell />} />
+      </Routes>
     </Content>
   );
 };

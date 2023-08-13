@@ -1,0 +1,13 @@
+.inline-field {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.value {
+  flex-grow: 1;
+}

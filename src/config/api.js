@@ -1,3 +1,34 @@
 const apiURL = "http://localhost:8080";
-export const apiTicket = apiURL + "/ticket";
-export const apiRoom = apiURL + "/room";
+
+const apiRoom = apiURL + "/room";
+
+const apiTicket = apiURL + "/ticket";
+
+const apiStaff = apiURL + "/employee";
+
+const apiCombo = apiURL + "/combo";
+
+const apiFood = apiURL + "/snack";
+
+const apiOrder = apiURL + "/order";
+
+const apiOrderSnack = apiURL + "/order-snack";
+
+const apiOrderTicket = apiURL + "/order-ticket";
+
+const apiOrderTimeline = apiURL + "/order-time-line";
+
+const apiSalePayMent = apiURL + "/sale-payment";
+
+export {
+  apiRoom,
+  apiTicket,
+  apiStaff,
+  apiCombo,
+  apiFood,
+  apiOrder,
+  apiOrderSnack,
+  apiOrderTicket,
+  apiOrderTimeline,
+  apiSalePayMent,
+};

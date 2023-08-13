@@ -68,3 +68,23 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+// npm chạy project: 
+
+npm install axios react
+npm install react-scroll react-router-dom antd,
+npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome : thư viện icon fortwesome
+
+
+npm i react-perfect-scrollbar --legacy-peer-deps
+
+npm i react-icons --legacy-peer-deps
+
+npm install @ant-design/icons --legacy-peer-deps
+
+
+npm install @reduxjs/toolkit react-redux
+
+npm install bootstrap --legacy-peer-deps
+
+tất cả cộng với đuôi:--legacy-peer-deps
+//

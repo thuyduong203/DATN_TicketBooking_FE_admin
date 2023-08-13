@@ -1,14 +1,16 @@
 import { Modal, Button, Form, Input, Select } from "antd";
 import axios from "axios";
-
+import { apiStaff } from "../../../../config/api";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../app/hook";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
 import {
   AddNhanVien,
+  GetDetailStaff,
+  SetDetailStaff,
   SetListStaff,
 } from "../../../app/reducers/StaffSlice.reducer";
 
-const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
+const ModalUpdateStaff = ({ isModalVisible, handleCancel, id }) => {
   const [chucVu, setChucVu] = useState(0);
   const [ten, setTen] = useState("");
   const [sdt, setSdt] = useState("");
@@ -16,6 +18,32 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
   const [diaChi, setDiaChi] = useState("");
   const [matKhau, setMatKhau] = useState("");
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isModalVisible && id) {
+      axios.get(apiStaff + "/find-by-id/" + id).then((response) => {
+        dispatch(SetDetailStaff(response.data.data));
+        // setChucVu(response.data.data.role);
+        // setTen(response.data.data.name);
+        // setDiaChi(response.data.data.address);
+        // setEmail(response.data.data.email);
+        // setSdt(response.data.data.phoneNumber);
+        // setMatKhau(response.data.data.password);
+      });
+    }
+  }, [isModalVisible, id]);
+
+  const staff = useAppSelector(GetDetailStaff);
+  const detail = () => {
+    setChucVu(staff.role);
+    setTen(staff.name);
+    setDiaChi(staff.address);
+    setEmail(staff.email);
+    setSdt(staff.phoneNumber);
+    setMatKhau(staff.password);
+    console.log(ten);
+  };
+
   const handleOk = () => {
     const obj = {
       name: ten,
@@ -29,21 +57,19 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
       "Bạn có chắc chắn muốn thực hiện hành động này?"
     );
     if (confirmed === true) {
-      axios
-        .post("http://localhost:8080/employee/add", obj)
-        .then((response) => {
-          if (response.data.statusCode === "success") {
-            let data = response.data.data;
-            dispatch(AddNhanVien(data));
-            alert("Thêm thành công");
-            handleCancel();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      //   axios
+      //     .post(apiStaff + "/update" + id, obj)
+      //     .then((response) => {
+      //       if (response.data.statusCode === "success") {
+      //         alert("Sửa thành công");
+      //         handleCancel();
+      //       }
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
+      console.log(obj);
     }
-
     // Perform actions to add new staff member here
   };
 
@@ -57,11 +83,10 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
       <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
         <Form.Item
           label="Chức vụ"
-          name="role"
           rules={[{ required: true, message: "Vui lòng chọn chức vụ!" }]}
         >
           <Select
-            defaultValue={0}
+            defaultValue={chucVu}
             onChange={(e) => {
               setChucVu(e);
             }}
@@ -72,7 +97,6 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
         </Form.Item>
         <Form.Item
           label="Tên nhân viên"
-          name="name"
           rules={[{ required: true, message: "Vui lòng nhập tên nhân viên!" }]}
         >
           <Input
@@ -84,7 +108,6 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
         </Form.Item>
         <Form.Item
           label="SĐT"
-          name="phoneNumber"
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
         >
           <Input
@@ -96,7 +119,6 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
         </Form.Item>
         <Form.Item
           label="Email"
-          name="email"
           rules={[
             { required: true, message: "Vui lòng nhập email!" },
             { type: "email", message: "Email không hợp lệ!" },
@@ -111,7 +133,6 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
         </Form.Item>
         <Form.Item
           label="Địa chỉ"
-          name="address"
           rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
         >
           <Input
@@ -123,7 +144,6 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
         </Form.Item>
         <Form.Item
           label="Mật khẩu"
-          name="password"
           rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
         >
           <Input.Password
@@ -138,4 +158,4 @@ const ModalCreateStaff = ({ isModalVisible, handleCancel }) => {
   );
 };
 
-export default ModalCreateStaff;
+export default ModalUpdateStaff;

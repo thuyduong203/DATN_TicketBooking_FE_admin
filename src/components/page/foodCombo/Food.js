@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, InputNumber, Select } from "antd";
 import axios from "axios";
+import { apiFood } from "../../../config/api";
 
 const Food = () => {
   const [detailModalVisible, setDetailModalVisible] = useState(false);
@@ -18,6 +19,10 @@ const Food = () => {
   let [quantity, setQuantity] = useState();
   let [idFood, setIdFood] = useState();
   let idTypeFoodUpdate;
+  const [searchText, setSearchTetx] = useState("");
+  const [status1, setStatus1] = useState("all");
+  const [minPrice, setMinPrice] = useState(0.0);
+  const [maxPrice, setMaxPrice] = useState(0.0);
 
   useEffect(() => {
     loadFood(currentPage);
@@ -63,6 +68,89 @@ const Food = () => {
           loadFood(0);
         }
       });
+    }
+  };
+
+  //search
+  useEffect(() => {
+    handleSearch();
+  }, [searchText]);
+
+  const handleSearch = () => {
+    axios
+      .get(apiFood + "/search-text?search=" + searchText + "&page=" + 0)
+      .then((response) => {
+        setList(
+          response.data.content.map((item, index) => ({
+            ...item,
+            stt: index + 1,
+          }))
+        );
+        // setList(response.data.content);
+        setCurrentPage(0);
+        setToTalPages(response.data.totalPages);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API search ticket:", error);
+      });
+  };
+
+  //search giá
+  useEffect(() => {
+    handleSearchPrice();
+  }, [minPrice, maxPrice]);
+
+  const handleSearchPrice = () => {
+    if (minPrice === "" || maxPrice === "") {
+      loadFood(currentPage);
+    } else if (minPrice === 0 || maxPrice === 0) {
+      loadFood(currentPage);
+    } else {
+      axios
+        .get(
+          apiFood +
+            "/search-price?min=" +
+            minPrice +
+            "&max=" +
+            maxPrice +
+            "&page=" +
+            0
+        )
+        .then(function (response) {
+          setList(
+            response.data.content.map((item, index) => ({
+              ...item,
+              stt: index + 1,
+            }))
+          );
+          // setList(response.data.content);
+          setCurrentPage(0);
+          setToTalPages(response.data.totalPages);
+        });
+    }
+  };
+
+  // search status
+  useEffect(() => {
+    findByStatus();
+  }, [status1]);
+
+  const findByStatus = () => {
+    if (status1 !== "all") {
+      axios
+        .get(apiFood + "/find-by-status?status=" + status1 + "&page=" + 0)
+        .then(function (response) {
+          setList(
+            response.data.content.map((item, index) => ({
+              ...item,
+              stt: index + 1,
+            }))
+          );
+          setCurrentPage(0);
+          setToTalPages(response.data.totalPages);
+        });
+    } else {
+      loadFood(currentPage);
     }
   };
 
@@ -254,6 +342,68 @@ const Food = () => {
 
   return (
     <div>
+      <h2>Đồ ăn</h2>
+      <div className="search-select-wrapper">
+        <Input
+          value={searchText}
+          onChange={(e) => setSearchTetx(e.target.value)}
+          className="ticket-input-search search"
+          placeholder="Tên/ loại food"
+        />
+        <div className="select-wrapper">
+          <label className="select-label" htmlFor="my-select">
+            Giá nhỏ nhất:
+          </label>
+          <Input
+            value={minPrice}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (!isNaN(value)) {
+                // Kiểm tra nếu là số
+                setMinPrice(value);
+              }
+            }}
+            placeholder="Giá nhỏ nhất"
+          />
+        </div>
+        <div className="select-wrapper">
+          <label className="select-label" htmlFor="my-select">
+            Giá lớn nhất:
+          </label>
+          <Input
+            value={maxPrice}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (!isNaN(value)) {
+                // Kiểm tra nếu là số
+                setMaxPrice(value);
+              }
+            }}
+            placeholder="GIá lớn nhất"
+          />
+        </div>
+      </div>
+      <div className="search-select-wrapper dong-2">
+        <div className="select-wrapper trang-thai">
+          <label className="select-label" htmlFor="my-select">
+            Trạng thái:
+          </label>
+          <Select
+            id="ticket-select-trangThai"
+            defaultValue="all"
+            style={{ width: 150 }}
+            // onChange={findByStatusAndRole}
+            onChange={(e) => {
+              setStatus1(e);
+            }}
+            options={[
+              { value: "all", label: "Tất cả" },
+              { value: "0", label: "Đang áp dụng" },
+              { value: "1", label: "Ngừng áp dụng" },
+            ]}
+          />
+        </div>
+      </div>
       <div
         style={{
           display: "flex",
