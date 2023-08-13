@@ -1,5 +1,7 @@
 const apiURL = "http://localhost:8080";
 
+const apiRoom = apiURL + "/room";
+
 const apiTicket = apiURL + "/ticket";
 
 const apiStaff = apiURL + "/employee";
@@ -19,6 +21,7 @@ const apiOrderTimeline = apiURL + "/order-time-line";
 const apiSalePayMent = apiURL + "/sale-payment";
 
 export {
+  apiRoom,
   apiTicket,
   apiStaff,
   apiCombo,
