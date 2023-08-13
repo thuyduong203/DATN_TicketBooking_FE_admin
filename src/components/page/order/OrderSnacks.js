@@ -4,7 +4,10 @@ import React from "react";
 const OrderSnacks = ({ orderSnack }) => {
   return (
     <div className="mt-3">
-      <div className="d-flex bg-secondary-subtle p-2">
+      <div
+        className="d-flex bg-secondary-subtle p-2"
+        style={{ borderRadius: "10px" }}
+      >
         <div className="flex-grow-1">
           <h6 className="text-uppercase" style={{ marginTop: "13px" }}>
             ĐỒ ĂN
