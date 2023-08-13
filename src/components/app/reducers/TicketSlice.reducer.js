@@ -13,14 +13,14 @@ const TicketSlice = createSlice({
     SetListTikcet(state, action) {
       // truyền vào 1 tham số
       // data truyền vào hợp lệ
-      let data = action.payload;
+      // let data = action.payload;
       state.listTicket = action.payload;
       return state;
     },
     SetDetailTicket(state, action) {
       // truyền vào 1 tham số
       // data truyền vào hợp lệ
-      let data = action.payload;
+      // let data = action.payload;
       state.detailTicket = action.payload;
       return state;
     },
