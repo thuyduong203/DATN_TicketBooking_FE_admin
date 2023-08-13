@@ -2,7 +2,7 @@
   padding: 20px;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 1px 1px 5px rgb(161, 161, 161);
+  /* box-shadow: 1px 1px 5px rgb(161, 161, 161); */
   white-space: nowrap; /* Ngăn chữ xuống dòng trong .timeline-container */
 }
 
