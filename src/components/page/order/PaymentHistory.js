@@ -6,7 +6,10 @@ import FormatDate from "./FormatDate"; // Import FormatDate component
 const PaymentHistory = ({ salePayment }) => {
   return (
     <div className="mt-3">
-      <div className="d-flex bg-secondary-subtle p-2">
+      <div
+        className="d-flex bg-secondary-subtle p-2"
+        style={{ borderRadius: "10px" }}
+      >
         <div className="flex-grow-1">
           <h6 className="text-uppercase" style={{ marginTop: "13px" }}>
             LỊCH SỬ THANH TOÁN
@@ -22,7 +25,6 @@ const PaymentHistory = ({ salePayment }) => {
               borderRadius: "10px",
               width: "150px",
               height: "40px",
-              boxShadow: "rgb(183, 183, 183) 5px 6px;",
               border: "none",
               float: "right",
             }}
@@ -38,6 +40,7 @@ const PaymentHistory = ({ salePayment }) => {
               <th scope="col">Số tiền</th>
               <th scope="col">Thời gian</th>
               <th scope="col">Phương thức thanh toán</th>
+              <th scope="col">Nhân viên xác nhận</th>
             </tr>
           </thead>
           <tbody>
@@ -53,6 +56,7 @@ const PaymentHistory = ({ salePayment }) => {
                 <td>{item.note === null ? "Không có ghi chú" : item.note}</td>
                 <td>{item.createBy}</td> */}
                 <td>{item.description}</td>
+                <td>{item.order.employee.name}</td>
               </tr>
             ))}
           </tbody>
