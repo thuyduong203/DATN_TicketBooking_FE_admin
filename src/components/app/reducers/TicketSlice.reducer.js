@@ -1,4 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { apiTicket } from "../../../config/api";
+import { Modal } from "antd";
+import { produce } from "immer";
 
 const initialState = {
   // giá trị khởi tạo của state
@@ -13,7 +17,7 @@ const TicketSlice = createSlice({
     SetListTikcet(state, action) {
       // truyền vào 1 tham số
       // data truyền vào hợp lệ
-      let data = action.payload;
+      // let data = action.payload;
       state.listTicket = action.payload;
       return state;
     },
@@ -24,34 +28,31 @@ const TicketSlice = createSlice({
       state.detailTicket = action.payload;
       return state;
     },
-    // AddNhanVien(state, action) {
-    //   // truyền vào 1 tham số
-    //   // data truyền vào hợp lệ
-    //   let data = action.payload;
-    //   let obj = {
-    //     id: data.id,
-    //     ten: data.ten,
-    //     diaChi: data.diaChi,
-    //     gioiTinh: data.gioiTinh,
-    //     ma: data.ma,
-    //     sdt: data.sdt,
-    //     idCuaHang: data.cuaHang.id,
-    //     tenCuaHang: data.cuaHang.ten,
-    //   };
-    //   state.listNhanVien.unshift(obj);
-    //   state.listNhanVien.pop();
-    //   return state;
-    // },
-    // SetListCuaHang(state, action) {
-    //   // truyền vào 1 tham số
-    //   // data truyền vào hợp lệ
-    //   let data = action.payload;
-    //   state.listCuaHang = action.payload;
-    // },
+    PrintfTicket(state, action) {
+      const ticketId = action.payload;
+      const printUrl = `${apiTicket}/print/${ticketId}`;
+      axios
+        .get(printUrl)
+        .then((response) => {
+          console.log("In vé thành công:", response.data);
+          Modal.success({
+            title: "In thành công",
+            content: "Vé đã được in thành công.",
+          });
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API in vé:", error);
+          Modal.error({
+            title: "Lỗi khi in vé",
+            content: "Đã xảy ra lỗi khi in vé.",
+          });
+        });
+    },
   }, // những cái sự kiện thêm, sửa, xóa, tìm kiếm, sắp xếp, ... của thằng initialState
 });
 
-export const { SetListTikcet, SetDetailTicket } = TicketSlice.actions;
+export const { SetListTikcet, SetDetailTicket, PrintfTicket } =
+  TicketSlice.actions;
 
 export const GetTicket = (state) => state.ticket;
 export const GetListTicket = (state) => state.ticket.listTicket;

@@ -75,3 +75,8 @@
 .modal-detail-ticket-div-center {
   clear: both;
 }
+.ticket-search-chooseDay {
+  width: 30%;
+  margin-left: 10%;
+  margin-right: 5%;
+}
