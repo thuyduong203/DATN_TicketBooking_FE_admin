@@ -38,7 +38,7 @@ const Staff = () => {
       .then((response) => {
         dispatch(SetListStaff(response.data.content));
         // setList(response.data.content);
-        setCurrentPage(0);
+        setCurrentPage(response.data.number);
         setToTalPages(response.data.totalPages);
       });
   };
