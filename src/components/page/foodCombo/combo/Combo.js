@@ -8,6 +8,7 @@ import {
   InputNumber,
   Select,
   DatePicker,
+  Pagination,
 } from "antd";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../app/hook";
@@ -40,7 +41,7 @@ const Combo = () => {
   const loadCombo = (page) => {
     axios.get(apiCombo + "?page=" + page).then((response) => {
       dispatch(SetListCombo(response.data.content));
-      setCurrentPage(0);
+      setCurrentPage(response.data.number);
       setToTalPages(response.data.totalPages);
     });
   };
@@ -373,6 +374,14 @@ const Combo = () => {
         rowKey="id"
         className="centered-table"
       />
+      <div className="pagination-wrapper">
+        <Pagination
+          simple
+          current={currentPage + 1}
+          onChange={(value) => setCurrentPage(value - 1)}
+          total={totalPages * 10}
+        />
+      </div>
       <ModalCreateCombo
         isModalVisible={isModalCreate}
         handleCancel={handleCancel}

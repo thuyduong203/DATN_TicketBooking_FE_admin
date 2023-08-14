@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, InputNumber, Select } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Pagination,
+} from "antd";
 import axios from "axios";
 import { apiFood } from "../../../config/api";
 
@@ -52,7 +61,7 @@ const Food = () => {
         }))
       );
       // setList(response.data.content);
-      setCurrentPage(0);
+      setCurrentPage(response.data.number);
       setToTalPages(response.data.totalPages);
     });
   };
@@ -421,6 +430,14 @@ const Food = () => {
         pagination={false}
         rowKey="id"
       />
+      <div className="pagination-wrapper">
+        <Pagination
+          simple
+          current={currentPage + 1}
+          onChange={(value) => setCurrentPage(value - 1)}
+          total={totalPages * 10}
+        />
+      </div>
       <Modal
         title="Thêm đồ ăn"
         visible={isModalVisible}
