@@ -29,13 +29,13 @@ const Order = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(500000);
+  const [searchPrice, setSearchPrice] = useState("");
   const { Search } = Input;
   //taoDispatch
   const dispatch = useAppDispatch();
   //
-  const [minPrice, setMinPrice] = useState(null);
-  const [maxPrice, setMaxPrice] = useState(null);
   //
   //formatNgay
   dayjs.extend(customParseFormat);
@@ -94,7 +94,27 @@ const Order = () => {
   };
 
   const handlePriceChange = (values) => {
-    // Handle price range change
+    searchOrdersPrice(searchQuery, values[0], values[1]);
+  };
+
+  const searchOrdersPrice = (query, minPrice, maxPrice) => {
+    axios
+      .get(apiOrder + "/searchOrderPrice", {
+        params: {
+          pageNo: 0,
+          search: query,
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+        },
+      })
+      .then((response) => {
+        dispatch(SetListOrder(response.data.content));
+        setCurrentPage(response.data.number);
+        setTotalPages(response.data.totalPages);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API tìm kiếm:", error);
+      });
   };
   //
   const renderStatus = (status) => {
