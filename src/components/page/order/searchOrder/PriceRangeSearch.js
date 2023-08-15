@@ -20,7 +20,7 @@ const PriceRangeSearch = ({ defaultPriceRange, onPriceChange }) => {
       <Slider
         range
         min={0}
-        max={1000}
+        max={500000}
         value={priceRange}
         onChange={handlePriceChange}
       />
