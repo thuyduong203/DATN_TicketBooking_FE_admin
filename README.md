@@ -88,3 +88,4 @@ npm install bootstrap --legacy-peer-deps
 
 tất cả cộng với đuôi:--legacy-peer-deps
 //
+npm install react-bootstrap 
