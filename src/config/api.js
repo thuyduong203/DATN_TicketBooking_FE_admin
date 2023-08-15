@@ -19,6 +19,7 @@ const apiOrderTicket = apiURL + "/order-ticket";
 const apiOrderTimeline = apiURL + "/order-time-line";
 
 const apiSalePayMent = apiURL + "/sale-payment";
+const apiShowTime = apiURL + "/show-time";
 
 export {
   apiRoom,
@@ -31,4 +32,5 @@ export {
   apiOrderTicket,
   apiOrderTimeline,
   apiSalePayMent,
+  apiShowTime,
 };
