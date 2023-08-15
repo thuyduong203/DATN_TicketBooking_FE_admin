@@ -21,11 +21,15 @@ import {
   SetListOrder,
   GetListOrder,
 } from "../../../components/app/reducers/OrderSlice.reducer";
+import TextSearch from "./searchOrder/TextSearch";
+import DateRangeSearch from "./searchOrder/DateRangeSearch";
+import PriceRangeSearch from "./searchOrder/PriceRangeSearch";
 //
 const Order = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const { Search } = Input;
   //taoDispatch
   const dispatch = useAppDispatch();
@@ -35,8 +39,6 @@ const Order = () => {
   //
   //formatNgay
   dayjs.extend(customParseFormat);
-  const { RangePicker } = DatePicker;
-  const dateFormat = "YYYY/MM/DD";
   // loadDataDungListOrderRedux
   const loadDataOrder = (currentPage) => {
     axios
@@ -57,11 +59,43 @@ const Order = () => {
   }, [currentPage]);
   //setListLayDuLieuTuRedux
   const listOrderr = useAppSelector(GetListOrder);
+
   //search
-  const handleSearch = () => {
-    onSearch(minPrice, maxPrice);
+  const handleTextSearch = (query) => {
+    setSearchQuery(query); // Lưu nội dung ô input tìm kiếm
+    if (query.trim() === "") {
+      // Kiểm tra xem query có chỉ chứa khoảng trắng và không có kí tự nào không
+      axios
+        .get(apiOrder + "/get-all?pageNo=" + currentPage)
+        .then((response) => {
+          dispatch(SetListOrder(response.data.content));
+          setCurrentPage(response.data.number);
+          setTotalPages(response.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API get all order:", error);
+        });
+    } else {
+      axios
+        .get(apiOrder + "/searchOrder?pageNo=0&search=" + query)
+        .then((response) => {
+          dispatch(SetListOrder(response.data.content));
+          setCurrentPage(response.data.number);
+          setTotalPages(response.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API tìm kiếm:", error);
+        });
+    }
   };
-  const onSearch = (value) => console.log(value);
+
+  const handleDateChange = (dates) => {
+    // Handle date range change
+  };
+
+  const handlePriceChange = (values) => {
+    // Handle price range change
+  };
   //
   const renderStatus = (status) => {
     switch (status) {
@@ -230,37 +264,16 @@ const Order = () => {
     <div className="container">
       <div className="row" style={{ marginBottom: "20px" }}>
         <div className="col-3">
-          {/* searchInput */}
-          <Search
-            placeholder="Search...."
-            allowClear
-            enterButton
-            size="large"
-            onSearch={onSearch}
-            style={{ marginTop: "20px", height: "50px" }}
-          />
+          <TextSearch onSearch={handleTextSearch} />
         </div>
         <div className="col-3">
-          {/* searchNgay */}
-          <RangePicker
-            style={{ marginTop: "20px", height: "40px" }}
-            defaultValue={[null, null]}
-            format={dateFormat}
-          />
+          <DateRangeSearch onDateChange={handleDateChange} />
         </div>
         <div className="col-3">
-          {/* searchKhoangGia */}
-          <h6 style={{ marginTop: "18px", color: "#696969" }}>Khoảng giá</h6>
-          <Slider
-            range
-            min={0}
-            max={1000}
-            value={[minPrice, maxPrice]}
-            onChange={(values) => {
-              setMinPrice(values[0]);
-              setMaxPrice(values[1]);
-              handleSearch(); // Thực hiện tìm kiếm khi thay đổi giá trị của Slider
-            }}
+          <PriceRangeSearch
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            onPriceChange={handlePriceChange}
           />
         </div>
         <div className="col-3">
