@@ -1,7 +1,7 @@
 // PaymentHistory.js
 import React from "react";
-import FormatCurrency from "./FormatCurrency"; // Import FormatCurrency component
-import FormatDate from "./FormatDate"; // Import FormatDate component
+import FormatCurrency from "../FormatCurrency"; // Import FormatCurrency component
+import FormatDate from "../FormatDate"; // Import FormatDate component
 
 const PaymentHistory = ({ salePayment }) => {
   return (

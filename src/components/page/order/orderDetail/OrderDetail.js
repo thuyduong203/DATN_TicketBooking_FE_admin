@@ -8,7 +8,7 @@ import {
   apiOrderSnack,
   apiOrderTicket,
   apiOrderTimeline,
-} from "../../../config/api";
+} from "../../../../config/api";
 import "./OrderDetail.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PaymentHistory from "./PaymentHistory";
