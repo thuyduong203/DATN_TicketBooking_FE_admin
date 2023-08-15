@@ -23,7 +23,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Staff from "./page/account/staff/staff";
 //Order
 import Order from "./page/order/Order";
-import OrderDetail from "./page/order/OrderDetail";
+import OrderDetail from "./page/order/orderDetail/OrderDetail";
 
 import Sell from "./page/sell";
 

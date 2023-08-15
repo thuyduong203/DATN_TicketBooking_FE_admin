@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Pagination,
-  Button,
-  Tooltip,
-  Input,
-  DatePicker,
-  Slider,
-} from "antd";
+import { Table, Pagination, Button, Tooltip, Input } from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { apiOrder } from "../../../config/api";
@@ -60,7 +52,7 @@ const Order = () => {
   //setListLayDuLieuTuRedux
   const listOrderr = useAppSelector(GetListOrder);
 
-  //search
+  //searchInput
   const handleTextSearch = (query) => {
     setSearchQuery(query); // Lưu nội dung ô input tìm kiếm
     if (query.trim() === "") {
@@ -88,11 +80,11 @@ const Order = () => {
         });
     }
   };
-
+  //searchKhoangNgay
   const handleDateChange = (dates) => {
     // Handle date range change
   };
-
+  //SearchKhoangGia
   const handlePriceChange = (values) => {
     searchOrdersPrice(searchQuery, values[0], values[1]);
   };
