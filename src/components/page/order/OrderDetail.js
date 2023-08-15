@@ -7,41 +7,59 @@ import {
   apiSalePayMent,
   apiOrderSnack,
   apiOrderTicket,
+  apiOrderTimeline,
 } from "../../../config/api";
-import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
-import {
-  FaRegCalendarCheck,
-  FaRegFileAlt,
-  FaPencilAlt,
-  FaTrash,
-} from "react-icons/fa";
 import "./OrderDetail.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PaymentHistory from "./PaymentHistory";
 import OrderSnacks from "./OrderSnacks";
 import OrderTicket from "./OrderTicket";
+import OrderTimeLine from "./OrderTimeLine";
+import CancelOrderModal from "./CancelOrderModal";
+import OrderInfo from "./OrderInfo";
+import OrderTimeLineDetail from "./OrderTimeLineDetail";
 const OrderDetail = () => {
   const { id } = useParams();
-  console.log(id);
   const [orderDetail, setOrderDetail] = useState(null);
   const [listSalePayment, setSalePayment] = useState([]);
   const [listOrderSnacks, setOrderSnacks] = useState([]);
   const [listOrderTicket, setOrderTicket] = useState([]);
+  const [listOrderTimeLine, setOrderTimeLine] = useState([]);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  // mở Modal timeLineDetail
+  const [showTimelineModal, setShowTimelineModal] = useState(false);
+  const handleTimelineModalOpen = () => {
+    setShowTimelineModal(true);
+  };
+  const handleTimelineModalClose = () => {
+    setShowTimelineModal(false);
+  };
+  //
   useEffect(() => {
     axios
       .get(apiOrder + `/get-one/${id}`)
       .then((response) => {
-        console.log(response.data);
         setOrderDetail(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API get order by ID:", error);
       });
-
+    // timeline
+    axios
+      .get(apiOrderTimeline + `/get-one/${id}`)
+      .then((response) => {
+        // console.log("OrderTimeLine" + response.data);
+        setOrderTimeLine(response.data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API get orderTimeline:", error);
+      });
+    //
+    //  salePayment
     axios
       .get(apiSalePayMent + `/list-sale-payment-by-order/${id}`)
       .then((response) => {
-        console.log(response.data);
         setSalePayment(response.data);
       })
       .catch((error) => {
@@ -52,7 +70,6 @@ const OrderDetail = () => {
     axios
       .get(apiOrderSnack + `/list-order-snack/${id}`)
       .then((response) => {
-        console.log(response.data);
         setOrderSnacks(response.data);
       })
       .catch((error) => {
@@ -62,28 +79,49 @@ const OrderDetail = () => {
     axios
       .get(apiOrderTicket + `/list-order-ticket/${id}`)
       .then((response) => {
-        console.log(response.data);
         setOrderTicket(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi api order ticket");
       });
   }, [id]);
-
   if (!orderDetail) {
     return <div>Loading...</div>;
   }
-  //
-  const getStatusClass = () => {
-    if (orderDetail.status === 1) {
-      return "btn btn-warning";
-    } else if (orderDetail.status === 2) {
-      return "btn btn-success";
-    } else if (orderDetail.status === 3) {
-      return "btn btn-danger";
+  //hủy đơn
+  const handleCancelOrder = async (cancelReason) => {
+    const requestBody = {
+      note: cancelReason,
+    };
+    console.log(requestBody);
+    try {
+      const response = await axios.put(apiOrder + `/huy/${id}`, requestBody);
+      console.log("Order cancelled successfully:", response.data);
+      // Cập nhật lại dữ liệu của orderTimeLine sau khi hủy đơn
+      axios
+        .get(apiOrderTimeline + `/get-one/${id}`)
+        .then((response) => {
+          setOrderTimeLine(response.data);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API get orderTimeline:", error);
+        });
+      // detail
+      axios
+        .get(apiOrder + `/get-one/${id}`)
+        .then((response) => {
+          setOrderDetail(response.data);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API get order by ID:", error);
+        });
+    } catch (error) {
+      console.error("Error cancelling order:", error);
     }
-    return "";
+
+    setShowCancelModal(false);
   };
+  //detail
   //
   let buttonStyle = {
     height: "50px",
@@ -109,46 +147,7 @@ const OrderDetail = () => {
       </div>
       {/* Phần Timeline */}
       <div className="timeline-container">
-        <Timeline minEvents={5} placeholder>
-          <TimelineEvent
-            color="#00CC00"
-            icon={FaRegFileAlt}
-            title="Em rascunho"
-            subtitle="26/03/2019 09:51"
-          />
-          <TimelineEvent
-            color="#00CC00"
-            icon={FaRegCalendarCheck}
-            title="Agendado"
-            subtitle="26/03/2019 09:51"
-          />
-          <TimelineEvent
-            color="#ffd700"
-            icon={FaPencilAlt}
-            title="Agendado"
-            subtitle="26/03/2019 09:51"
-          />
-          <TimelineEvent
-            color="#ffd700"
-            icon={FaPencilAlt}
-            title="Agendado"
-            subtitle="26/03/2019 09:51"
-          />
-          <TimelineEvent
-            color="#ffd700"
-            icon={FaPencilAlt}
-            title="Agendado"
-            subtitle="26/03/2019 09:51"
-          />
-          <TimelineEvent
-            color="#9c2919"
-            icon={FaTrash}
-            title="Erro"
-            subtitle="26/03/2019 09:51"
-          />
-          {/* Thêm các sự kiện TimelineEvent khác tại đây */}
-          {/* ... */}
-        </Timeline>
+        <OrderTimeLine orderTimeLine={listOrderTimeLine} />
         {/*  */}
         <div class="row">
           <div class="col-md-6 d-flex justify-content-start">
@@ -157,6 +156,7 @@ const OrderDetail = () => {
                 <button
                   className="btn btn-danger"
                   style={{ ...buttonStyle, color: "#fff" }}
+                  onClick={() => setShowCancelModal(true)}
                   // onClick={showSweetAlert}
                 >
                   <i
@@ -190,7 +190,7 @@ const OrderDetail = () => {
                 border: "none",
                 fontƯeight: "bolder",
               }}
-              ng-click="openFrame()"
+              onClick={handleTimelineModalOpen}
             >
               Chi tiết
             </button>
@@ -199,58 +199,7 @@ const OrderDetail = () => {
         {/*  */}
       </div>
       {/* Thông tin chi tiết */}
-      <div style={{ marginBottom: "50px" }}>
-        <div className="mt-3">
-          <div
-            className="d-flex bg-secondary-subtle p-2"
-            style={{ borderRadius: "10px" }}
-          >
-            <div className="flex-grow-1">
-              <h6 className="text-uppercase" style={{ marginTop: "13px" }}>
-                Thông tin đơn hàng
-              </h6>
-            </div>
-            <div className="">
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-                style={{
-                  backgroundColor: "rgb(85, 172, 238)",
-                  color: "rgb(255, 255, 255)",
-                  borderRadius: "10px",
-                  width: "100px",
-                  height: "40px",
-                  boxShadow: "rgb(183, 183, 183) 5px 6px;",
-                  border: "none",
-                  float: "right",
-                }}
-              >
-                Cập nhật
-              </button>
-            </div>
-          </div>
-          <h6 style={{ marginTop: "10px" }}>
-            <span style={{ color: "#555555" }}>Mã code:</span>{" "}
-            {orderDetail.code}
-          </h6>
-          <h6>
-            <span style={{ color: "#555555" }}>Trạng Thái:</span>{" "}
-            <span className={getStatusClass()} style={{ borderRadius: "10px" }}>
-              {orderDetail.status === 1
-                ? "Chờ thanh toán"
-                : orderDetail.status === 2
-                ? "Đã thanh toán"
-                : orderDetail.status === 3
-                ? "Hủy"
-                : ""}
-            </span>
-          </h6>
-          <h6>
-            <span style={{ color: "#555555" }}>Họ Và Tên:</span>{" "}
-            {orderDetail.customerName}
-          </h6>
-        </div>
-      </div>
+      <OrderInfo orderDetail={orderDetail} />
 
       {/* Phần Lịch sử thanh toán */}
       <PaymentHistory salePayment={listSalePayment} />
@@ -269,6 +218,18 @@ const OrderDetail = () => {
         </div>
       </div>
       {/* ... */}
+      <CancelOrderModal
+        show={showCancelModal}
+        onHide={() => setShowCancelModal(false)}
+        onConfirm={handleCancelOrder}
+        onCancelReasonChange={setCancelReason}
+      />
+      {/*  */}
+      <OrderTimeLineDetail
+        show={showTimelineModal}
+        onClose={handleTimelineModalClose}
+        orderTimeline={listOrderTimeLine}
+      />
     </div>
   );
 };
