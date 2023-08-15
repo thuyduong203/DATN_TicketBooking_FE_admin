@@ -6,6 +6,7 @@ import RoomSliceReducer from "./reducers/RoomSlice.reducer";
 import StaffSliceReducer from "./reducers/StaffSlice.reducer";
 import ComboSliceReducer from "./reducers/ComboSlice.reducer";
 import OrderSliceReducer from "./reducers/OrderSlice.reducer";
+import ShowTimeSliceReducer from "./reducers/ShowTimeSlice.reducer";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     staff: StaffSliceReducer,
     combo: ComboSliceReducer,
     order: OrderSliceReducer,
+    showTime: ShowTimeSliceReducer,
   },
 });
 
