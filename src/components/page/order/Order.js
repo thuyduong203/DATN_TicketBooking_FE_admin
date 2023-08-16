@@ -82,8 +82,39 @@ const Order = () => {
   };
   //searchKhoangNgay
   const handleDateChange = (dates) => {
-    // Handle date range change
+    if (dates) {
+      const ngayBatDau = dates[0];
+      const ngayKetThuc = dates[1];
+
+      if (ngayKetThuc) {
+        axios
+          .get(apiOrder + "/searchDate", {
+            params: {
+              pageNo: 0,
+              dateFirst: ngayBatDau ? ngayBatDau.format("YYYY-MM-DD") : "",
+              dateLast: ngayKetThuc.format("YYYY-MM-DD"),
+            },
+          })
+          .then((response) => {
+            dispatch(SetListOrder(response.data.content));
+            setCurrentPage(response.data.number);
+            setTotalPages(response.data.totalPages);
+          })
+          .catch((error) => {
+            console.error("Lỗi tìm kiếm theo ngày:", error);
+          });
+      } else if (!ngayBatDau && !ngayKetThuc) {
+        loadDataOrder(currentPage);
+      } else {
+        // Thực hiện tìm kiếm theo ngày bắt đầu mà không có ngày kết thúc
+        // (Ở đây, bạn có thể xử lý tương tự như trường hợp khi chỉ có ngày kết thúc)
+      }
+    } else {
+      // Xử lý trường hợp dates không tồn tại (ví dụ: lúc ban đầu)
+      loadDataOrder(currentPage);
+    }
   };
+
   //SearchKhoangGia
   const handlePriceChange = (values) => {
     searchOrdersPrice(searchQuery, values[0], values[1]);
