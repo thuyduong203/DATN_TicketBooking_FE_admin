@@ -17,6 +17,7 @@ import Showtime from "./components/page/films/Showtime";
 import Trailer from "./components/page/films/Trailer";
 //account
 import Staff from "./page/account/staff/staff";
+import Customer from "./page/account/Customer";
 
 export {
   Room,
@@ -34,4 +35,5 @@ export {
   Showtime,
   Trailer,
   Staff,
+  Customer,
 };

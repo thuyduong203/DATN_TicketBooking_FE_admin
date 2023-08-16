@@ -68,7 +68,7 @@ const Navbar = ({ collapsed }) => {
         <p>Tài khoản</p>
         <SubMenu icon={<UploadOutlined />} title="Tài khoản">
           <Menu.Item key="/staff">Nhân viên</Menu.Item>
-          <Menu.Item key="/client">Khách hàng</Menu.Item>
+          <Menu.Item key="/customer">Khách hàng</Menu.Item>
         </SubMenu>
       </Menu>
     </Sider>

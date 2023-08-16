@@ -1,0 +1,22 @@
+.man-ban-hang-1 {
+  width: 50%;
+  float: left;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  padding-bottom: 50px;
+}
+.man-ban-hang-2 {
+  width: 50%;
+  float: right;
+  border-bottom: 1px solid black;
+  padding-left: 30px;
+}
+.man-ban-hang-3 {
+  width: 50%;
+  float: left;
+  border-right: 1px solid black;
+}
+.man-ban-hang-4 {
+  width: 50%;
+  float: right;
+}
