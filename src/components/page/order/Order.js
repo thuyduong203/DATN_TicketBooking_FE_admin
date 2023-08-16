@@ -16,6 +16,8 @@ import {
 import TextSearch from "./searchOrder/TextSearch";
 import DateRangeSearch from "./searchOrder/DateRangeSearch";
 import PriceRangeSearch from "./searchOrder/PriceRangeSearch";
+import TypeOrderSearch from "./searchOrder/TypeOrderSearch ";
+import StatusSearch from "./searchOrder/StatusSearch";
 //
 const Order = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -25,6 +27,8 @@ const Order = () => {
   const [maxPrice, setMaxPrice] = useState(500000);
   const [searchPrice, setSearchPrice] = useState("");
   const { Search } = Input;
+  const [defaultStatus, setDefaultStatus] = useState(0); // Trạng thái mặc định là 0 (Tất cả)
+  const [selectedType, setSelectedType] = useState("all");
   //taoDispatch
   const dispatch = useAppDispatch();
   //
@@ -49,6 +53,26 @@ const Order = () => {
   useEffect(() => {
     loadDataOrder(currentPage);
   }, [currentPage]);
+  //
+  useEffect(() => {
+    if (defaultStatus === 0) {
+      // Gọi API search tất cả ở đây
+      loadDataOrder(currentPage);
+    } else {
+      // Gọi API search theo trạng thái ở đây
+      handleStatusSearch(defaultStatus);
+    }
+  }, [defaultStatus]);
+
+  useEffect(() => {
+    if (selectedType === '"all') {
+      // Gọi API search tất cả ở đây
+      loadDataOrder(currentPage);
+    } else {
+      // Gọi API search theo trạng thái ở đây
+      handleTypeOrderSearch(selectedType);
+    }
+  }, [selectedType]);
   //setListLayDuLieuTuRedux
   const listOrderr = useAppSelector(GetListOrder);
 
@@ -139,6 +163,58 @@ const Order = () => {
         console.error("Lỗi khi gọi API tìm kiếm:", error);
       });
   };
+  // Hàm tìm kiếm theo trạng thái
+  const handleStatusSearch = (selectedStatus) => {
+    axios
+      .get(apiOrder + "/searchStatus", {
+        params: {
+          pageNo: 0,
+          status: selectedStatus,
+        },
+      })
+      .then((response) => {
+        dispatch(SetListOrder(response.data.content));
+        setCurrentPage(response.data.number);
+        setTotalPages(response.data.totalPages);
+      })
+      .catch((error) => {
+        console.error("Lỗi tìm kiếm theo trạng thái:", error);
+      });
+  };
+  // Xử lý khi người dùng thay đổi loại đơn hàng
+  const handleTypeOrderSearch = (type) => {
+    setSelectedType(type);
+
+    if (type === "all") {
+      // Gọi API get-all để lấy tất cả đơn hàng
+      loadDataOrder(currentPage);
+    } else if (selectedType === "online") {
+      axios
+        .get(apiOrder + "/searchCustomerIsNull?pageNo=" + currentPage)
+        .then((response) => {
+          dispatch(SetListOrder(response.data.content));
+          setCurrentPage(response.data.number);
+          setTotalPages(response.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API searchCustomerIsNull:", error);
+        });
+    } else if (selectedType === "offline") {
+      axios
+        .get(apiOrder + "/searchCustomerIsNotNull?pageNo=" + currentPage)
+        .then((response) => {
+          dispatch(SetListOrder(response.data.content));
+          setCurrentPage(response.data.number);
+          setTotalPages(response.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API searchCustomerIsNotNull:", error);
+        });
+    }
+  };
+  //
+
+  //
   //
   const renderStatus = (status) => {
     switch (status) {
@@ -337,6 +413,15 @@ const Order = () => {
           >
             <span>+ Thêm hóa đơn</span>
           </button>
+        </div>
+      </div>
+      {/* row 2 */}
+      <div className="row" style={{ marginBottom: "20px" }}>
+        <div className="col-4">
+          <StatusSearch onStatusSearch={setDefaultStatus} />
+        </div>
+        <div className="col-4">
+          <TypeOrderSearch onTypeOrderSearch={handleTypeOrderSearch} />
         </div>
       </div>
       {/* table */}
