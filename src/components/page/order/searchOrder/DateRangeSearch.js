@@ -10,7 +10,7 @@ const DateRangeSearch = ({ onDateChange }) => {
       style={{ marginTop: "20px", height: "40px" }}
       defaultValue={[null, null]}
       format={dateFormat}
-      onChange={onDateChange}
+      onChange={onDateChange} // Truyền hàm onDateChange ở đây
     />
   );
 };
